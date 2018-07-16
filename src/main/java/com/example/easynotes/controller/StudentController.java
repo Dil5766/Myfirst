@@ -1,11 +1,11 @@
-package com.example.easynotes.controler;
+package com.example.easynotes.controller;
 
 import com.example.easynotes.entity.Student;
 import com.example.easynotes.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,16 +25,24 @@ public class StudentController {
     }
 
 
-  @RequestMapping("/load/{id}")
-	public Optional<Student> getStudent  (@PathVariable String id) {
+    @RequestMapping(value = "/load/{id}", method = RequestMethod.GET)
+	public Optional<Student> getById(@PathVariable String id) {
       return studentService.loadStudentById(id);
+    }
 
+    @RequestMapping("/load/all")
+    public List<Student> getAll() {
+        return studentService.loadAllStudents();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/add")
-    public Student addStudent(@RequestBody Student student) {
-        studentService.createStudent(student);
-        return student;
+    public Long add(@RequestBody Student student) {
+        return studentService.createStudent(student);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    public Boolean remove(@PathVariable String id) {
+        return studentService.removeStudentByStudentId(Long.valueOf(id));
     }
 
     @RequestMapping(method=RequestMethod.PUT, value="/test/{id}")
